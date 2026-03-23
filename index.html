@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Active Travel BMI Tracker</title>
-    <link rel="stylesheet" href="style.css?v=5.0">
+    <link rel="stylesheet" href="style.css?v=6.0">
 </head>
 <body>
     <div class="app-container">
@@ -19,7 +19,7 @@
                 <div class="input-row">
                     <div class="input-group">
                         <label>Weight (kg)</label>
-                        <input type="number" id="weight" value="75" step="0.1">
+                        <input type="number" id="weight" value="75">
                     </div>
                     <div class="input-group">
                         <label>Height (cm)</label>
@@ -43,6 +43,7 @@
             <!-- 2. Outward -->
             <section class="card">
                 <h3>2. Outward Journey</h3>
+                <p class="instruction">Select your travel mode and durations in minutes below</p>
                 <div id="outward-legs">
                     <div class="leg-item">
                         <select class="leg-activity">
@@ -67,6 +68,7 @@
             <!-- 3. Return -->
             <section id="returnSection" class="card hidden">
                 <h3>3. Return Journey</h3>
+                <p class="instruction">Select your travel mode and durations in minutes below</p>
                 <div id="return-legs">
                     <div class="leg-item">
                         <select class="leg-activity">
@@ -83,38 +85,71 @@
 
             <button id="calcBtn" class="btn-primary">Calculate Monthly Impact</button>
 
-            <!-- RESULTS (As shown in your image) -->
+            <!-- RESULTS SECTION -->
             <section id="results" class="results-area hidden">
-                <div class="bmi-header">
-                    <div id="newBMIDisplay" class="bmi-number">--</div>
-                    <div class="bmi-message">Your result suggests you are <span id="categoryText" class="bold">--</span></div>
+                <div class="nhs-header">
+                    <div class="bmi-main">
+                        <span id="newBMIDisplay">--</span>
+                    </div>
+                    <p class="bmi-status">Your projected result suggests you would be <strong id="categoryText">--</strong></p>
                 </div>
 
+                <!-- NHS BAR VISUALIZER -->
                 <div class="visualizer-container">
-                    <div id="marker-new" class="triangle-marker">▼</div>
-                    <div class="gradient-bar"></div>
-                    <div class="scale-ticks">
-                        <span style="left: 28.3%;">18.5</span>
-                        <span style="left: 50%;">25</span>
-                        <span style="left: 66.6%;">30</span>
+                    <div id="marker-old" class="marker marker-old">Old<span>▼</span></div>
+                    <div id="marker-new" class="marker marker-new">New<span>▼</span></div>
+                    
+                    <div class="nhs-bar">
+                        <div class="segment purple" style="width: 14%;"></div> <!-- 15-18.5 -->
+                        <div class="segment green" style="width: 26%;"></div>  <!-- 18.5-25 -->
+                        <div class="segment yellow" style="width: 20%;"></div> <!-- 25-30 -->
+                        <div class="segment red" style="flex-grow: 1;"></div>  <!-- 30-40 -->
+                    </div>
+                    
+                    <div class="nhs-labels">
+                        <span style="left: 14%;">18.5</span>
+                        <span style="left: 40%;">25</span>
+                        <span style="left: 60%;">30</span>
                     </div>
                 </div>
 
-                <div class="stats-footer">
-                    <div>Extra Burn: <strong id="calOut">0</strong> kcal/month</div>
-                    <div>Weight Loss: <strong id="weightOut">0</strong> kg/month</div>
+                <!-- COMPARISON TABLE -->
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Current</th>
+                            <th>Projected (1 Month)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Weight</td>
+                            <td><span id="oldWeightTable">--</span> kg</td>
+                            <td><span id="newWeightTable">--</span> kg</td>
+                        </tr>
+                        <tr>
+                            <td>BMI</td>
+                            <td><span id="oldBMITable">--</span></td>
+                            <td><strong id="newBMITable">--</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="summary-stats">
+                    <p>Extra Monthly Burn: <strong id="calOut">0</strong> kcal</p>
+                    <p>Total Weight Loss: <strong id="weightOut">0</strong> kg</p>
                 </div>
-                
+
                 <p id="insight" class="fun-fact"></p>
             </section>
 
-            <button class="btn-text" onclick="document.getElementById('methodology').classList.toggle('hidden')">How is this calculated?</button>
+            <button class="btn-text" onclick="document.getElementById('methodology').classList.toggle('hidden')">View methodology</button>
             <div id="methodology" class="card hidden method-text">
-                <p><strong>Calorie Burn:</strong> Calculated using the formula: (MET - 1) * 0.0175 * Weight * Duration.</p>
-                <p><strong>Disclaimer:</strong> This assumes your baseline activity and calorie intake remain constant.</p>
+                <p>Calculated using Net METs: <em>(MET - 1) * 0.0175 * Weight * Duration</em>. Assumes stable diet and baseline activity.</p>
             </div>
         </main>
     </div>
-    <script src="script.js?v=5.0"></script>
+    <script src="script.js?v=6.0"></script>
 </body>
 </html>

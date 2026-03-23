@@ -9,8 +9,8 @@ function addLeg(containerId) {
             <option value="3.0">E-Bike</option>
             <option value="1.5">Public Transport</option>
         </select>
-        <input type="number" class="leg-duration" placeholder="Mins">
-        <button type="button" style="border:none; background:none; color:red; cursor:pointer;" onclick="this.parentElement.remove()">✕</button>
+        <input type="number" class="leg-duration" value="15">
+        <button onclick="this.parentElement.remove()" style="border:none; background:none; cursor:pointer;">✕</button>
     `;
     container.appendChild(div);
 }
@@ -40,33 +40,34 @@ document.getElementById('calcBtn').addEventListener('click', function() {
 
     const outward = calculateCals('outward-legs');
     const inward = isSameReturn ? outward : calculateCals('return-legs');
-    
-    const monthlyExtraBurn = (outward + inward) * days * 4.33;
-    const kgLost = monthlyExtraBurn / 7700;
+    const monthlyBurn = (outward + inward) * days * 4.33;
+    const kgLost = monthlyBurn / 7700;
 
-    const heightM = heightCm / 100;
-    const oldBMI = weight / (heightM * heightM);
-    const newBMI = (weight - kgLost) / (heightM * heightM);
+    const bmi = weight / ((heightCm / 100) ** 2);
+    const newBmi = (weight - kgLost) / ((heightCm / 100) ** 2);
 
     // Update Text Results
     document.getElementById('results').classList.remove('hidden');
-    document.getElementById('calOut').innerText = Math.round(monthlyExtraBurn).toLocaleString();
+    document.getElementById('newBMIDisplay').innerText = newBmi.toFixed(1);
+    document.getElementById('calOut').innerText = Math.round(monthlyBurn).toLocaleString();
     document.getElementById('weightOut').innerText = kgLost.toFixed(2);
-    document.getElementById('oldBMIText').innerText = oldBMI.toFixed(1);
-    document.getElementById('newBMIText').innerText = newBMI.toFixed(1);
 
-    // Marker Positioning (Mapping BMI 15-40 range)
-    function getPercent(bmi) {
-        let p = ((bmi - 15) / (40 - 15)) * 100;
-        return Math.max(0, Math.min(100, p));
-    }
+    // Determine Category Text
+    let category = "";
+    if (newBmi < 18.5) category = "underweight";
+    else if (newBmi < 25) category = "a healthy weight";
+    else if (newBmi < 30) category = "overweight";
+    else category = "obese";
+    document.getElementById('categoryText').innerText = category;
 
-    document.getElementById('marker-old').style.left = getPercent(oldBMI) + '%';
-    document.getElementById('marker-new').style.left = getPercent(newBMI) + '%';
+    // Position Marker (View range: BMI 10 to 40)
+    // 10 = 0%, 40 = 100%
+    let percent = ((newBmi - 10) / (40 - 10)) * 100;
+    percent = Math.max(5, Math.min(95, percent)); // Keep within bounds
+    document.getElementById('marker-new').style.left = percent + '%';
 
-    // Fun Fact
-    const slices = Math.floor(monthlyExtraBurn / 250);
-    document.getElementById('insight').innerText = `Fun Fact: Your monthly commute burns the equivalent of ${slices} slices of pizza!`;
+    const pizza = Math.floor(monthlyBurn / 250);
+    document.getElementById('insight').innerText = `Your commute burns the equivalent of ${pizza} slices of pizza every month!`;
     
     document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
 });

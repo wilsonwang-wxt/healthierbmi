@@ -52,17 +52,17 @@ document.getElementById('calcBtn').addEventListener('click', function() {
     const oldBMI = weight / (heightM * heightM);
     const newBMI = (weight - kgLost) / (heightM * heightM);
 
-    // Update UI
+    // Update Text Results
     document.getElementById('results').classList.remove('hidden');
     document.getElementById('calOut').innerText = Math.round(monthlyBurn).toLocaleString();
     document.getElementById('weightOut').innerText = kgLost.toFixed(2);
     document.getElementById('oldBMIText').innerText = oldBMI.toFixed(1);
     document.getElementById('newBMIText').innerText = newBMI.toFixed(1);
 
-    // Position Markers (Scale is from BMI 15 to 40)
+    // Position Markers (Scale range: 15 to 40)
     function getPosition(bmi) {
         let percentage = ((bmi - 15) / (40 - 15)) * 100;
-        return Math.max(0, Math.min(100, percentage)); // Clamp between 0-100%
+        return Math.max(0, Math.min(100, percentage)); 
     }
 
     document.getElementById('marker-old').style.left = getPosition(oldBMI) + '%';
@@ -70,7 +70,7 @@ document.getElementById('calcBtn').addEventListener('click', function() {
 
     // Fun Insight
     const pizzaSlices = Math.floor(monthlyBurn / 250);
-    document.getElementById('insight').innerText = `Your monthly commute burns the equivalent of ${pizzaSlices} slices of pepperoni pizza!`;
+    document.getElementById('insight').innerText = `Fun Fact: Your commute burns the equivalent of ${pizzaSlices} slices of pizza per month!`;
     
     document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
 });

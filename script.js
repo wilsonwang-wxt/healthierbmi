@@ -56,7 +56,7 @@ document.getElementById('calcBtn').addEventListener('click', function() {
     document.getElementById('oldBMIText').innerText = oldBMI.toFixed(1);
     document.getElementById('newBMIText').innerText = newBMI.toFixed(1);
 
-    // Marker Positioning (Scale 15-40)
+    // Marker Positioning (Mapping BMI 15-40 range)
     function getPercent(bmi) {
         let p = ((bmi - 15) / (40 - 15)) * 100;
         return Math.max(0, Math.min(100, p));
@@ -66,7 +66,7 @@ document.getElementById('calcBtn').addEventListener('click', function() {
     document.getElementById('marker-new').style.left = getPercent(newBMI) + '%';
 
     const slices = Math.floor(monthlyExtraBurn / 250);
-    document.getElementById('insight').innerText = `Fun Fact: Your commute burns the equivalent of ${slices} slices of pizza every month!`;
+    document.getElementById('insight').innerText = `Fun Fact: Your monthly commute burns the equivalent of ${slices} slices of pizza!`;
     
     document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
 });

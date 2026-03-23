@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Active Travel BMI Tracker</title>
-    <link rel="stylesheet" href="style.css?v=3.0">
+    <link rel="stylesheet" href="style.css?v=4.0">
 </head>
 <body>
     <div class="app-container">
         <header>
             <h1>Active Travel BMI Tracker</h1>
-            <p class="tagline">Calculate how your daily commute impacts your health.</p>
+            <p class="tagline">See how your commute impacts your health over time.</p>
         </header>
 
         <main>
@@ -84,7 +84,7 @@
 
             <button id="calcBtn" class="btn-primary">Calculate Monthly Impact</button>
 
-            <!-- Results -->
+            <!-- Results Section -->
             <section id="results" class="results-container hidden">
                 <h2>Monthly Projection</h2>
                 
@@ -110,22 +110,24 @@
                     </div>
 
                     <div class="scale-container">
+                        <!-- Markers -->
                         <div id="marker-old" class="marker marker-top">Old<br><span>▼</span></div>
-
+                        
                         <div class="bmi-bar">
                             <div class="seg u" style="width: 14%;"></div> <!-- 15-18.5 -->
-                            <div class="seg h" style="width: 18%;"></div> <!-- 18.5-23 -->
-                            <div class="seg w" style="width: 18%;"></div> <!-- 23-27.5 -->
-                            <div class="seg o" style="flex-grow: 1;"></div> <!-- 27.5-40 -->
+                            <div class="seg h" style="width: 26%;"></div> <!-- 18.5-25 -->
+                            <div class="seg w" style="width: 20%;"></div> <!-- 25-30 -->
+                            <div class="seg o" style="flex-grow: 1;"></div> <!-- 30-40 -->
                         </div>
 
                         <div id="marker-new" class="marker marker-bottom"><span>▲</span><br>New</div>
 
+                        <!-- Labels -->
                         <div class="scale-labels">
                             <span>15</span>
                             <span>18.5</span>
-                            <span>23</span>
-                            <span>27.5</span>
+                            <span>25</span>
+                            <span>30</span>
                             <span>40</span>
                         </div>
                     </div>
@@ -137,12 +139,12 @@
             <button class="btn-text" onclick="document.getElementById('methodology').classList.toggle('hidden')">How is this calculated?</button>
             <div id="methodology" class="methodology-card hidden">
                 <h4>Methodology</h4>
-                <p><strong>Calorie Burn:</strong> (MET - 1) * 0.0175 * Weight * Duration. The "-1" isolates exercise-induced calories.</p>
-                <p><strong>Weight Loss:</strong> Assumes 7,700 kcal deficit = 1kg weight loss.</p>
-                <p><strong>Disclaimer:</strong> Assumes baseline physical activity and calorie intake remain constant.</p>
+                <p><strong>Calorie Burn:</strong> Calculated using the formula: <code>(MET - 1) * 0.0175 * Weight * Duration</code>. We subtract 1 MET to isolate the "extra" burn above resting levels.</p>
+                <p><strong>Weight Loss:</strong> Assumes a 7,700 kcal deficit = 1kg of fat loss.</p>
+                <p><strong>Important Note:</strong> This projection assumes all other factors remain constant, including your <strong>baseline activity</strong> and <strong>daily calorie intake</strong>.</p>
             </div>
         </main>
     </div>
-    <script src="script.js?v=3.0"></script>
+    <script src="script.js?v=4.0"></script>
 </body>
 </html>

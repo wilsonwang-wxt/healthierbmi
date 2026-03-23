@@ -1,29 +1,3 @@
-function addLeg(containerId) {
-    const container = document.getElementById(containerId);
-    const newRow = document.createElement('div');
-    newRow.className = 'leg-row';
-    newRow.innerHTML = `
-        <select class="leg-activity">
-            <option value="3.5">Walking (Brisk)</option>
-            <option value="6.8">Cycling</option>
-            <option value="3.0">E-Bike</option>
-            <option value="1.5">Public Transport</option>
-        </select>
-        <input type="number" class="leg-duration" placeholder="Mins">
-        <button type="button" class="remove-btn" onclick="this.parentElement.remove()">✕</button>
-    `;
-    container.appendChild(newRow);
-}
-
-function toggleReturn() {
-    const isSame = document.getElementById('sameReturn').checked;
-    document.getElementById('returnSection').classList.toggle('hidden', isSame);
-}
-
-document.getElementById('toggleMethod').addEventListener('click', () => {
-    document.getElementById('methodology').classList.toggle('hidden');
-});
-
 document.getElementById('calcBtn').addEventListener('click', function() {
     const weight = parseFloat(document.getElementById('weight').value);
     const heightCm = parseFloat(document.getElementById('height').value);
@@ -32,6 +6,7 @@ document.getElementById('calcBtn').addEventListener('click', function() {
 
     if (!weight || !heightCm) return alert("Please enter weight and height.");
 
+    // Calculation Engine
     function getContainerCalories(containerId) {
         let total = 0;
         document.querySelectorAll(`#${containerId} .leg-row`).forEach(row => {
@@ -59,16 +34,18 @@ document.getElementById('calcBtn').addEventListener('click', function() {
     document.getElementById('oldBMIText').innerText = oldBMI.toFixed(1);
     document.getElementById('newBMIText').innerText = newBMI.toFixed(1);
 
-    // Position Markers (Scale range: 15 to 40)
+    // Marker Positioning (Range: 15 to 40)
     function getPosition(bmi) {
+        // We calculate position as a percentage of the bar width
         let percentage = ((bmi - 15) / (40 - 15)) * 100;
         return Math.max(0, Math.min(100, percentage)); 
     }
 
+    // Apply positions
     document.getElementById('marker-old').style.left = getPosition(oldBMI) + '%';
     document.getElementById('marker-new').style.left = getPosition(newBMI) + '%';
 
-    // Fun Insight
+    // Fun Fact
     const pizzaSlices = Math.floor(monthlyBurn / 250);
     document.getElementById('insight').innerText = `Fun Fact: Your commute burns the equivalent of ${pizzaSlices} slices of pizza per month!`;
     

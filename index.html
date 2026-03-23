@@ -4,18 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Active Travel BMI Tracker</title>
-    <link rel="stylesheet" href="style.css?v=4.0">
+    <link rel="stylesheet" href="style.css?v=5.0">
 </head>
 <body>
     <div class="app-container">
         <header>
             <h1>Active Travel BMI Tracker</h1>
-            <p class="tagline">See how your commute impacts your health over time.</p>
         </header>
 
         <main>
             <!-- 1. Profile -->
-            <section class="input-card">
+            <section class="card">
                 <h3>1. Your Profile</h3>
                 <div class="input-row">
                     <div class="input-group">
@@ -42,9 +41,9 @@
             </section>
 
             <!-- 2. Outward -->
-            <section class="input-card">
+            <section class="card">
                 <h3>2. Outward Journey</h3>
-                <div id="outward-legs" class="legs-list">
+                <div id="outward-legs">
                     <div class="leg-item">
                         <select class="leg-activity">
                             <option value="3.5">Walking (Brisk)</option>
@@ -52,12 +51,12 @@
                             <option value="3.0">E-Bike</option>
                             <option value="1.5">Public Transport</option>
                         </select>
-                        <input type="number" class="leg-duration" value="20" placeholder="Mins">
+                        <input type="number" class="leg-duration" value="20">
                     </div>
                 </div>
                 <button class="btn-add" onclick="addLeg('outward-legs')">+ Add Leg</button>
                 
-                <div class="return-toggle-box">
+                <div class="toggle-box">
                     <label class="checkbox-container">
                         <input type="checkbox" id="sameReturn" checked onchange="toggleReturn()">
                         Return journey is the same
@@ -65,10 +64,10 @@
                 </div>
             </section>
 
-            <!-- 3. Return (Hidden if same) -->
-            <section id="returnSection" class="input-card hidden">
+            <!-- 3. Return -->
+            <section id="returnSection" class="card hidden">
                 <h3>3. Return Journey</h3>
-                <div id="return-legs" class="legs-list">
+                <div id="return-legs">
                     <div class="leg-item">
                         <select class="leg-activity">
                             <option value="3.5">Walking (Brisk)</option>
@@ -76,7 +75,7 @@
                             <option value="3.0">E-Bike</option>
                             <option value="1.5">Public Transport</option>
                         </select>
-                        <input type="number" class="leg-duration" value="20" placeholder="Mins">
+                        <input type="number" class="leg-duration" value="20">
                     </div>
                 </div>
                 <button class="btn-add" onclick="addLeg('return-legs')">+ Add Leg</button>
@@ -84,67 +83,38 @@
 
             <button id="calcBtn" class="btn-primary">Calculate Monthly Impact</button>
 
-            <!-- Results Section -->
-            <section id="results" class="results-container hidden">
-                <h2>Monthly Projection</h2>
+            <!-- RESULTS (As shown in your image) -->
+            <section id="results" class="results-area hidden">
+                <div class="bmi-header">
+                    <div id="newBMIDisplay" class="bmi-number">--</div>
+                    <div class="bmi-message">Your result suggests you are <span id="categoryText" class="bold">--</span></div>
+                </div>
+
+                <div class="visualizer-container">
+                    <div id="marker-new" class="triangle-marker">▼</div>
+                    <div class="gradient-bar"></div>
+                    <div class="scale-ticks">
+                        <span style="left: 28.3%;">18.5</span>
+                        <span style="left: 50%;">25</span>
+                        <span style="left: 66.6%;">30</span>
+                    </div>
+                </div>
+
+                <div class="stats-footer">
+                    <div>Extra Burn: <strong id="calOut">0</strong> kcal/month</div>
+                    <div>Weight Loss: <strong id="weightOut">0</strong> kg/month</div>
+                </div>
                 
-                <div class="results-grid">
-                    <div class="result-box">
-                        <span class="label">Extra Burn</span>
-                        <div class="value"><span id="calOut">0</span> <small>kcal</small></div>
-                    </div>
-                    <div class="result-box">
-                        <span class="label">Weight Loss</span>
-                        <div class="value"><span id="weightOut">0</span> <small>kg</small></div>
-                    </div>
-                </div>
-
-                <div class="visualizer">
-                    <p class="bmi-summary">BMI: <span id="oldBMIText">0</span> → <strong id="newBMIText">0</strong></p>
-                    
-                    <div class="legend">
-                        <span><i class="dot u"></i> Underweight</span>
-                        <span><i class="dot h"></i> Healthy</span>
-                        <span><i class="dot w"></i> Overweight</span>
-                        <span><i class="dot o"></i> Obese</span>
-                    </div>
-
-                    <div class="scale-container">
-                        <!-- Markers -->
-                        <div id="marker-old" class="marker marker-top">Old<br><span>▼</span></div>
-                        
-                        <div class="bmi-bar">
-                            <div class="seg u" style="width: 14%;"></div> <!-- 15-18.5 -->
-                            <div class="seg h" style="width: 26%;"></div> <!-- 18.5-25 -->
-                            <div class="seg w" style="width: 20%;"></div> <!-- 25-30 -->
-                            <div class="seg o" style="flex-grow: 1;"></div> <!-- 30-40 -->
-                        </div>
-
-                        <div id="marker-new" class="marker marker-bottom"><span>▲</span><br>New</div>
-
-                        <!-- Labels -->
-                        <div class="scale-labels">
-                            <span>15</span>
-                            <span>18.5</span>
-                            <span>25</span>
-                            <span>30</span>
-                            <span>40</span>
-                        </div>
-                    </div>
-                </div>
-
                 <p id="insight" class="fun-fact"></p>
             </section>
 
             <button class="btn-text" onclick="document.getElementById('methodology').classList.toggle('hidden')">How is this calculated?</button>
-            <div id="methodology" class="methodology-card hidden">
-                <h4>Methodology</h4>
-                <p><strong>Calorie Burn:</strong> Calculated using the formula: <code>(MET - 1) * 0.0175 * Weight * Duration</code>. We subtract 1 MET to isolate the "extra" burn above resting levels.</p>
-                <p><strong>Weight Loss:</strong> Assumes a 7,700 kcal deficit = 1kg of fat loss.</p>
-                <p><strong>Important Note:</strong> This projection assumes all other factors remain constant, including your <strong>baseline activity</strong> and <strong>daily calorie intake</strong>.</p>
+            <div id="methodology" class="card hidden method-text">
+                <p><strong>Calorie Burn:</strong> Calculated using the formula: (MET - 1) * 0.0175 * Weight * Duration.</p>
+                <p><strong>Disclaimer:</strong> This assumes your baseline activity and calorie intake remain constant.</p>
             </div>
         </main>
     </div>
-    <script src="script.js?v=4.0"></script>
+    <script src="script.js?v=5.0"></script>
 </body>
 </html>

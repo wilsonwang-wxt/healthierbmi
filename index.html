@@ -68,32 +68,43 @@
 
     <button id="calcBtn" class="primary-btn">Calculate Monthly Impact</button>
 
-    <!-- VISUAL BMI RESULTS -->
     <div id="results" class="result-card hidden">
       <h2>Monthly Projection</h2>
       
       <div class="stat-grid">
-        <div class="stat-box"><small>Calories Burned</small><div id="calOut">0</div><small>kcal</small></div>
+        <div class="stat-box"><small>Extra Burn</small><div id="calOut">0</div><small>kcal</small></div>
         <div class="stat-box"><small>Weight Loss</small><div id="weightOut">0</div><small>kg</small></div>
       </div>
 
       <div class="visualizer-container">
-        <p>BMI Progress: <span id="oldBMIText">0</span> → <strong id="newBMIText">0</strong></p>
+        <p class="bmi-text">BMI Progress: <span id="oldBMIText">0</span> → <strong id="newBMIText">0</strong></p>
         
-        <div class="bmi-scale">
-            <div class="segment underweight"></div>
-            <div class="segment healthy"></div>
-            <div class="segment overweight"></div>
-            <div class="segment obese"></div>
-            
-            <!-- Markers -->
-            <div id="marker-old" class="marker old" title="Current BMI"><span>▼</span><br>Old</div>
-            <div id="marker-new" class="marker new" title="New BMI"><span>▼</span><br>New</div>
+        <!-- Legend -->
+        <div class="bmi-legend">
+            <div class="legend-item"><span class="dot underweight"></span> Underweight</div>
+            <div class="legend-item"><span class="dot healthy"></span> Healthy</div>
+            <div class="legend-item"><span class="dot overweight"></span> Overweight</div>
+            <div class="legend-item"><span class="dot obese"></span> Obese</div>
         </div>
-        <div class="scale-labels">
-            <span>18.5</span>
-            <span>25</span>
-            <span>30</span>
+
+        <div class="bmi-scale-wrapper">
+            <!-- Markers -->
+            <div id="marker-old" class="marker old">Old<br><span>▲</span></div>
+            <div id="marker-new" class="marker new"><span>▼</span><br>New</div>
+
+            <div class="bmi-scale">
+                <div class="segment underweight"></div>
+                <div class="segment healthy"></div>
+                <div class="segment overweight"></div>
+                <div class="segment obese"></div>
+            </div>
+            <div class="scale-labels">
+                <span>15</span>
+                <span>18.5</span>
+                <span>25</span>
+                <span>30</span>
+                <span>40</span>
+            </div>
         </div>
       </div>
 
@@ -103,9 +114,9 @@
     <button id="toggleMethod" class="method-link">How is this calculated?</button>
     <div id="methodology" class="card hidden method-content">
       <h4>Methodology</h4>
-      <p><strong>Calorie calculation:</strong> We use the Metabolic Equivalent of Task (MET) formula: 
-      <code>(MET - 1) * 0.0175 * Weight * Time</code>. The "-1" accounts for the calories you would have burned while resting.</p>
-      <p><strong>Weight Projection:</strong> Based on the calculation that a deficit of 7,700 kcal results in 1kg of weight loss. This assumes your food intake remains constant.</p>
+      <p><strong>Calories:</strong> Uses the MET formula: <code>(MET - 1) * 0.0175 * Weight * Time</code>. The "-1" accounts for net calories burned above resting.</p>
+      <p><strong>Weight:</strong> Assumes a deficit of 7,700 kcal equals 1kg of weight loss.</p>
+      <p><strong>Disclaimer:</strong> This calculation assumes all other factors remain constant, including your <strong>baseline physical activity levels</strong> and <strong>average calorie intake</strong>.</p>
     </div>
   </div>
   <script src="script.js"></script>

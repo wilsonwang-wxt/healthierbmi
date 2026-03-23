@@ -1,65 +1,50 @@
-body { font-family: -apple-system, sans-serif; background: #f9f9f9; padding: 20px; color: #333; }
-.app-container { max-width: 500px; margin: 0 auto; }
-.card { background: white; padding: 20px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f0f4f5; padding: 20px; color: #212b32; }
+.app-container { max-width: 550px; margin: 0 auto; }
+.card { background: white; padding: 20px; border-radius: 4px; border-bottom: 2px solid #d8dde0; margin-bottom: 15px; }
 .hidden { display: none !important; }
 
+h1 { color: #005eb8; font-size: 1.8rem; margin-bottom: 20px; }
+h3 { margin-top: 0; font-size: 1.2rem; color: #212b32; }
+.instruction { font-size: 0.85rem; font-style: italic; color: #4c6269; margin-bottom: 15px; }
+
 /* Inputs */
-.input-row { display: flex; gap: 10px; }
+.input-row { display: flex; gap: 15px; }
 .input-group { flex: 1; margin-bottom: 10px; }
-label { display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: #666; }
-input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; box-sizing: border-box; }
+label { display: block; font-size: 1rem; font-weight: bold; margin-bottom: 8px; }
+input, select { width: 100%; padding: 12px; border: 2px solid #212b32; border-radius: 4px; font-size: 1rem; box-sizing: border-box; }
 
-.leg-item { display: flex; gap: 5px; margin-bottom: 10px; }
-.btn-add { background: #eee; border: none; width: 100%; padding: 8px; border-radius: 5px; cursor: pointer; }
-.btn-primary { background: #007f8b; color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-size: 1.1rem; cursor: pointer; margin-top: 10px; font-weight: bold; }
+.leg-item { display: flex; gap: 10px; margin-bottom: 10px; }
+.btn-add { background: #f0f4f5; border: 2px solid #005eb8; color: #005eb8; font-weight: bold; width: 100%; padding: 10px; cursor: pointer; border-radius: 4px; }
+.btn-primary { background: #007f3b; color: white; border: none; width: 100%; padding: 18px; border-radius: 4px; font-size: 1.2rem; cursor: pointer; font-weight: bold; margin-top: 15px; }
 
-/* Toggle Box */
-.toggle-box { margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; }
-.checkbox-container { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; }
-input[type="checkbox"] { width: auto; }
+/* Results Header */
+.results-area { background: white; padding: 25px; border-radius: 4px; margin-top: 25px; border: 1px solid #d8dde0; }
+.nhs-header { text-align: center; margin-bottom: 50px; }
+.bmi-main { font-size: 4rem; font-weight: bold; color: #212b32; line-height: 1; }
+.bmi-status { font-size: 1.1rem; margin-top: 10px; }
 
-/* --- Results Section (Image Replica) --- */
-.results-area { background: white; padding: 30px 20px; border-radius: 15px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-.bmi-header { margin-bottom: 40px; }
-.bmi-number { font-size: 3rem; font-weight: 500; margin-bottom: 10px; }
-.bmi-message { font-size: 1.1rem; color: #333; }
-.bold { font-weight: bold; }
+/* --- NHS BAR --- */
+.visualizer-container { position: relative; width: 100%; height: 80px; margin: 40px 0; }
+.nhs-bar { display: flex; width: 100%; height: 25px; border-radius: 2px; overflow: hidden; border: 1px solid #212b32; }
+.segment { height: 100%; border-right: 1px solid white; }
+.purple { background: #330066; }
+.green { background: #007f3b; }
+.yellow { background: #ffeb3b; }
+.red { background: #d5281b; border-right: none; }
 
-.visualizer-container { position: relative; width: 100%; height: 60px; margin-bottom: 30px; }
+.nhs-labels { position: relative; width: 100%; height: 20px; margin-top: 8px; }
+.nhs-labels span { position: absolute; transform: translateX(-50%); font-size: 0.8rem; font-weight: bold; }
 
-/* Smooth Gradient Bar */
-.gradient-bar {
-    width: 100%;
-    height: 12px;
-    border-radius: 6px;
-    background: linear-gradient(to right, 
-        #ff3b30 0%,     /* Red (Underweight) */
-        #ffcc00 20%,    /* Yellow */
-        #4cd964 35%,    /* Green (Healthy) Start */
-        #4cd964 55%,    /* Green Healthy End */
-        #ffcc00 75%,    /* Yellow (Overweight) */
-        #ff3b30 100%    /* Red (Obese) */
-    );
-}
+/* Markers */
+.marker { position: absolute; transform: translateX(-50%); text-align: center; font-size: 0.75rem; font-weight: bold; transition: left 0.6s ease; width: 40px; }
+.marker span { display: block; font-size: 1.2rem; line-height: 0.8; }
+.marker-old { top: -35px; color: #768692; }
+.marker-new { top: -35px; color: #005eb8; z-index: 5; }
 
-.triangle-marker {
-    position: absolute;
-    top: -20px;
-    transform: translateX(-50%);
-    font-size: 1.2rem;
-    transition: left 0.8s ease-in-out;
-}
+/* Comparison Table */
+.comparison-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+.comparison-table th, .comparison-table td { padding: 12px; border: 1px solid #d8dde0; text-align: left; }
+.comparison-table th { background: #f0f4f5; font-size: 0.9rem; }
 
-.scale-ticks { position: relative; width: 100%; height: 20px; margin-top: 10px; }
-.scale-ticks span {
-    position: absolute;
-    transform: translateX(-50%);
-    font-size: 0.85rem;
-    color: #666;
-    border-top: 1px solid #ccc;
-    padding-top: 5px;
-}
-
-.stats-footer { display: flex; justify-content: space-between; font-size: 0.9rem; border-top: 1px solid #eee; padding-top: 15px; margin-top: 20px; }
-.fun-fact { background: #f0f4f4; padding: 10px; border-radius: 8px; font-size: 0.85rem; font-style: italic; margin-top: 15px; }
-.btn-text { background: none; border: none; color: #007f8b; text-decoration: underline; display: block; margin: 20px auto; cursor: pointer; }
+.fun-fact { background: #e8edee; padding: 15px; border-radius: 4px; font-size: 0.9rem; font-style: italic; margin-top: 20px; text-align: center; }
+.btn-text { background: none; border: none; color: #005eb8; text-decoration: underline; display: block; margin: 20px auto; cursor: pointer; }

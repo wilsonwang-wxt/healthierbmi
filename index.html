@@ -1,41 +1,158 @@
-<div class="visualizer-container">
-    <p class="bmi-text">BMI Progress: <span id="oldBMIText">0</span> → <strong id="newBMIText">0</strong></p>
-    
-    <!-- Legend -->
-    <div class="bmi-legend">
-        <div class="legend-item"><span class="dot underweight"></span> Underweight</div>
-        <div class="legend-item"><span class="dot healthy"></span> Healthy</div>
-        <div class="legend-item"><span class="dot overweight"></span> Overweight</div>
-        <div class="legend-item"><span class="dot obese"></span> Obese</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Travel BMI Tracker</title>
+    <!-- The ?v=2.0 helps force the browser to update its cache -->
+    <link rel="stylesheet" href="style.css?v=2.0">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Active Travel BMI Tracker</h1>
+            <p class="tagline">Calculate how your daily commute impacts your health.</p>
+        </header>
+
+        <main>
+            <!-- User Profile Section -->
+            <section class="input-card">
+                <h3>1. Your Profile</h3>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" id="weight" value="75" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label>Height (cm)</label>
+                        <input type="number" id="height" value="175">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Days of commute per week</label>
+                    <select id="days">
+                        <option value="1">1 Day</option>
+                        <option value="2">2 Days</option>
+                        <option value="3">3 Days</option>
+                        <option value="4">4 Days</option>
+                        <option value="5" selected>5 Days</option>
+                        <option value="6">6 Days</option>
+                        <option value="7">7 Days</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Outward Journey Section -->
+            <section class="input-card">
+                <h3>2. Outward Journey</h3>
+                <div id="outward-legs" class="legs-list">
+                    <div class="leg-item">
+                        <select class="leg-activity">
+                            <option value="3.5">Walking (Brisk)</option>
+                            <option value="6.8" selected>Cycling</option>
+                            <option value="3.0">E-Bike</option>
+                            <option value="1.5">Public Transport</option>
+                        </select>
+                        <input type="number" class="leg-duration" value="20" placeholder="Mins">
+                    </div>
+                </div>
+                <button class="btn-add" onclick="addLeg('outward-legs')">+ Add Leg</button>
+                
+                <div class="return-toggle-box">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="sameReturn" checked onchange="toggleReturn()">
+                        <span class="checkmark"></span>
+                        Return journey is the same
+                    </label>
+                </div>
+            </section>
+
+            <!-- Return Journey Section (Hidden by default) -->
+            <section id="returnSection" class="input-card hidden">
+                <h3>3. Return Journey</h3>
+                <div id="return-legs" class="legs-list">
+                    <div class="leg-item">
+                        <select class="leg-activity">
+                            <option value="3.5">Walking (Brisk)</option>
+                            <option value="6.8">Cycling</option>
+                            <option value="3.0">E-Bike</option>
+                            <option value="1.5">Public Transport</option>
+                        </select>
+                        <input type="number" class="leg-duration" value="20" placeholder="Mins">
+                    </div>
+                </div>
+                <button class="btn-add" onclick="addLeg('return-legs')">+ Add Leg</button>
+            </section>
+
+            <button id="calcBtn" class="btn-primary">Calculate Monthly Impact</button>
+
+            <!-- Results Section (Initially Hidden) -->
+            <section id="results" class="results-container hidden">
+                <h2>Monthly Projection</h2>
+                
+                <div class="results-grid">
+                    <div class="result-box">
+                        <span class="label">Extra Burn</span>
+                        <div class="value"><span id="calOut">0</span> <small>kcal</small></div>
+                    </div>
+                    <div class="result-box">
+                        <span class="label">Weight Loss</span>
+                        <div class="value"><span id="weightOut">0</span> <small>kg</small></div>
+                    </div>
+                </div>
+
+                <div class="visualizer">
+                    <p class="bmi-summary">BMI: <span id="oldBMIText">0</span> → <strong id="newBMIText">0</strong></p>
+                    
+                    <div class="legend">
+                        <span><i class="dot u"></i> Underweight</span>
+                        <span><i class="dot h"></i> Healthy</span>
+                        <span><i class="dot w"></i> Overweight</span>
+                        <span><i class="dot o"></i> Obese</span>
+                    </div>
+
+                    <div class="scale-container">
+                        <!-- OLD Marker (Top) -->
+                        <div id="marker-old" class="marker marker-top">
+                            Old BMI<br><span>▼</span>
+                        </div>
+
+                        <!-- THE BAR -->
+                        <div class="bmi-bar">
+                            <div class="seg u" style="width: 14%;"></div> <!-- 15-18.5 -->
+                            <div class="seg h" style="width: 26%;"></div> <!-- 18.5-25 -->
+                            <div class="seg w" style="width: 20%;"></div> <!-- 25-30 -->
+                            <div class="seg o" style="flex-grow: 1;"></div> <!-- 30-40 -->
+                        </div>
+
+                        <!-- NEW Marker (Bottom) -->
+                        <div id="marker-new" class="marker marker-bottom">
+                            <span>▲</span><br>New BMI
+                        </div>
+
+                        <div class="scale-labels">
+                            <span>15</span>
+                            <span>18.5</span>
+                            <span>25</span>
+                            <span>30</span>
+                            <span>40</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p id="insight" class="fun-fact"></p>
+            </section>
+
+            <button class="btn-text" onclick="document.getElementById('methodology').classList.toggle('hidden')">How is this calculated?</button>
+            <div id="methodology" class="methodology-card hidden">
+                <h4>Methodology</h4>
+                <p><strong>Calorie Burn:</strong> Calculated using the MET formula: <code>(MET - 1) * 0.0175 * Weight * Duration</code>. We use "Net METs" (-1) to isolate the extra energy spent above resting levels.</p>
+                <p><strong>Weight Loss:</strong> Assumes that a 7,700 kcal deficit leads to 1kg of fat loss.</p>
+                <p><strong>Important Assumption:</strong> This tool assumes all other lifestyle factors remain identical, including your <strong>baseline physical activity</strong> and <strong>daily calorie intake</strong>.</p>
+            </div>
+        </main>
     </div>
 
-    <!-- The Actual Scale Area -->
-    <div class="scale-area">
-        <!-- Old Marker (Above) -->
-        <div id="marker-old" class="marker old-marker">
-            Old<br><span>▼</span>
-        </div>
-
-        <!-- The Colored Bar -->
-        <div class="bmi-bar">
-            <div class="seg underweight"></div>
-            <div class="seg healthy"></div>
-            <div class="seg overweight"></div>
-            <div class="seg obese"></div>
-        </div>
-
-        <!-- New Marker (Below) -->
-        <div id="marker-new" class="marker new-marker">
-            <span>▲</span><br>New
-        </div>
-
-        <!-- Scale Labels -->
-        <div class="scale-numbers">
-            <span>15</span>
-            <span>18.5</span>
-            <span>25</span>
-            <span>30</span>
-            <span>40</span>
-        </div>
-    </div>
-</div>
+    <script src="script.js?v=2.0"></script>
+</body>
+</html>

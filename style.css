@@ -74,7 +74,7 @@ label {
     color: #636e72; 
 }
 
-/* INPUT & BUTTON STYLING */
+/* INPUTS & SELECTS */
 input, select { 
     width: 100%; 
     padding: 10px; 
@@ -84,30 +84,32 @@ input, select {
     font-size: 1rem; 
 }
 
-/* --- FIX FOR CHECKBOX ALIGNMENT --- */
+/* --- FIXED CHECKBOX ALIGNMENT --- */
 input[type="checkbox"] {
-    width: auto !important; /* Forces checkbox to not be 100% wide */
-    margin: 0;
+    width: 18px !important; /* Forces checkbox to be small */
+    height: 18px !important;
+    margin: 0 10px 0 0 !important; /* 10px gap between box and text */
     cursor: pointer;
+    flex-shrink: 0; /* Prevents box from squishing */
 }
 
 .return-toggle-box { 
     margin-top: 20px; 
     padding-top: 15px; 
     border-top: 1px dotted #eee; 
-    text-align: left; /* Ensure alignment to the left */
+    display: flex;
+    justify-content: flex-start;
 }
 
 .checkbox-container { 
-    display: flex; 
+    display: flex !important; /* Use flex to align box and text */
     align-items: center; 
-    gap: 10px; 
     cursor: pointer; 
     font-size: 0.9rem; 
     font-weight: 500;
-    justify-content: flex-start; /* Keeps items grouped on the left */
+    width: auto !important; /* Prevents label from filling the width */
 }
-/* ---------------------------------- */
+/* -------------------------------- */
 
 .leg-item { 
     display: flex; 
@@ -144,7 +146,7 @@ input[type="checkbox"] {
     transform: scale(0.98); 
 }
 
-/* RESULTS STYLING */
+/* RESULTS SECTION */
 .results-container { 
     background: white; 
     border-top: 6px solid var(--primary); 
@@ -187,7 +189,7 @@ input[type="checkbox"] {
     color: #636e72; 
 }
 
-/* BMI VISUALIZER SCALE & MARKERS */
+/* BMI VISUALIZER */
 .visualizer { 
     margin: 40px 0; 
     text-align: center; 
@@ -278,7 +280,7 @@ input[type="checkbox"] {
     color: var(--primary); 
 }
 
-/* MISC */
+/* MISC STYLES */
 .fun-fact { 
     background: #f1f2f6; 
     padding: 12px; 

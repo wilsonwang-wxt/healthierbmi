@@ -9,8 +9,8 @@ function addLeg(containerId) {
             <option value="3.0">E-Bike</option>
             <option value="1.5">Public Transport</option>
         </select>
-        <input type="number" class="leg-duration" value="15">
-        <button onclick="this.parentElement.remove()" style="border:none; background:none; cursor:pointer; font-size:1.2rem;">✕</button>
+        <input type="number" class="leg-duration" placeholder="Mins">
+        <button type="button" style="border:none; background:none; color:red; cursor:pointer;" onclick="this.parentElement.remove()">✕</button>
     `;
     container.appendChild(div);
 }
@@ -26,7 +26,9 @@ document.getElementById('calcBtn').addEventListener('click', function() {
     const days = parseInt(document.getElementById('days').value);
     const isSameReturn = document.getElementById('sameReturn').checked;
 
-    if (!weight || !heightCm) return alert("Please enter weight and height.");
+    // Range Validation
+    if (weight < 25.4 || weight > 317.5) return alert("Please enter weight between 25.4 and 317.5 kg.");
+    if (heightCm < 139.7 || heightCm > 243.8) return alert("Please enter height between 139.7 and 243.8 cm.");
 
     function calculateCals(containerId) {
         let total = 0;
@@ -40,42 +42,31 @@ document.getElementById('calcBtn').addEventListener('click', function() {
 
     const outward = calculateCals('outward-legs');
     const inward = isSameReturn ? outward : calculateCals('return-legs');
-    const monthlyBurn = (outward + inward) * days * 4.33;
-    const kgLost = monthlyBurn / 7700;
+    const monthlyExtraBurn = (outward + inward) * days * 4.33;
+    const kgLost = monthlyExtraBurn / 7700;
 
     const heightM = heightCm / 100;
-    const oldBmi = weight / (heightM * heightM);
-    const newBmi = (weight - kgLost) / (heightM * heightM);
+    const oldBMI = weight / (heightM * heightM);
+    const newBMI = (weight - kgLost) / (heightM * heightM);
 
-    // Update UI
+    // Update Text Results
     document.getElementById('results').classList.remove('hidden');
-    document.getElementById('newBMIDisplay').innerText = newBmi.toFixed(1);
-    document.getElementById('calOut').innerText = Math.round(monthlyBurn).toLocaleString();
+    document.getElementById('calOut').innerText = Math.round(monthlyExtraBurn).toLocaleString();
     document.getElementById('weightOut').innerText = kgLost.toFixed(2);
+    document.getElementById('oldBMIText').innerText = oldBMI.toFixed(1);
+    document.getElementById('newBMIText').innerText = newBMI.toFixed(1);
 
-    // Table update
-    document.getElementById('oldWeightTable').innerText = weight;
-    document.getElementById('newWeightTable').innerText = (weight - kgLost).toFixed(1);
-    document.getElementById('oldBMITable').innerText = oldBmi.toFixed(1);
-    document.getElementById('newBMITable').innerText = newBmi.toFixed(1);
-
-    // Category Text
-    let category = "";
-    if (newBmi < 18.5) category = "underweight";
-    else if (newBmi < 25) category = "a healthy weight";
-    else if (newBmi < 30) category = "overweight";
-    else category = "obese";
-    document.getElementById('categoryText').innerText = category;
-
-    // Marker Logic (BMI range 15 to 40)
+    // Marker Positioning (Scale 15-40)
     function getPercent(bmi) {
         let p = ((bmi - 15) / (40 - 15)) * 100;
         return Math.max(0, Math.min(100, p));
     }
 
-    document.getElementById('marker-old').style.left = getPercent(oldBmi) + '%';
-    document.getElementById('marker-new').style.left = getPercent(newBmi) + '%';
+    document.getElementById('marker-old').style.left = getPercent(oldBMI) + '%';
+    document.getElementById('marker-new').style.left = getPercent(newBMI) + '%';
 
-    document.getElementById('insight').innerText = `Your commute burns the equivalent of ${Math.floor(monthlyBurn / 250)} slices of pizza every month!`;
+    const slices = Math.floor(monthlyExtraBurn / 250);
+    document.getElementById('insight').innerText = `Fun Fact: Your commute burns the equivalent of ${slices} slices of pizza every month!`;
+    
     document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
 });

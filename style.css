@@ -22,21 +22,32 @@ input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radiu
 .stat-box { background: #f1f2f6; padding: 15px; border-radius: 10px; text-align: center; }
 .stat-box div { font-size: 1.5rem; font-weight: bold; color: #22a6b3; }
 
-/* BMI SCALE STYLING */
-.visualizer-container { margin-top: 30px; position: relative; padding-bottom: 40px; }
-.bmi-scale { height: 25px; display: flex; border-radius: 5px; overflow: visible; position: relative; margin-top: 40px; }
+/* BMI SCALE & LEGEND */
+.visualizer-container { margin-top: 20px; text-align: center; }
+.bmi-text { margin-bottom: 25px; font-size: 1rem; }
+
+.bmi-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 50px; }
+.legend-item { font-size: 0.75rem; display: flex; align-items: center; gap: 4px; color: #666; }
+.dot { width: 10px; height: 10px; border-radius: 2px; }
+
+.bmi-scale-wrapper { position: relative; width: 90%; margin: 0 auto 60px auto; height: 20px; }
+.bmi-scale { height: 100%; display: flex; border-radius: 4px; overflow: hidden; }
+
 .segment { height: 100%; }
-.underweight { background: #4834d4; width: 18.5%; border-radius: 5px 0 0 5px; } /* <18.5 */
-.healthy { background: #6ab04c; width: 25%; } /* 18.5 - 25 */
-.overweight { background: #f9ca24; width: 20%; } /* 25 - 30 */
-.obese { background: #eb4d4b; flex-grow: 1; border-radius: 0 5px 5px 0; } /* >30 */
+.underweight { background: #4834d4; width: 14%; } /* Represents 15 to 18.5 */
+.healthy { background: #6ab04c; width: 26%; }    /* Represents 18.5 to 25 */
+.overweight { background: #f9ca24; width: 20%; }  /* Represents 25 to 30 */
+.obese { background: #eb4d4b; flex-grow: 1; }     /* Represents 30 to 40 */
 
-.scale-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: #666; margin-top: 5px; }
+.scale-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: #999; margin-top: 4px; }
 
-.marker { position: absolute; top: -35px; text-align: center; font-size: 0.7rem; font-weight: bold; transform: translateX(-50%); transition: left 1s ease; }
-.marker.old { color: #95a5a6; }
-.marker.new { color: #22a6b3; top: -45px; font-size: 0.8rem; z-index: 2; }
-.marker span { font-size: 1.2rem; line-height: 1; }
+/* MARKERS */
+.marker { position: absolute; transform: translateX(-50%); text-align: center; font-weight: bold; font-size: 0.75rem; transition: left 1s ease; }
+.marker span { line-height: 1; display: block; }
 
-.insight-text { text-align: center; font-style: italic; font-size: 0.9rem; color: #555; margin-top: 20px; }
+.marker.old { top: -42px; color: #7f8c8d; }
+.marker.new { bottom: -42px; color: #22a6b3; font-size: 0.85rem; }
+
+.insight-text { font-style: italic; font-size: 0.9rem; color: #555; margin-top: 10px; border-top: 1px solid #eee; padding-top: 15px; }
 .method-link { background: none; border: none; color: #22a6b3; text-decoration: underline; display: block; margin: 20px auto; cursor: pointer; }
+.method-content { font-size: 0.8rem; color: #666; line-height: 1.4; }

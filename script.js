@@ -33,7 +33,6 @@ document.getElementById('calcBtn').addEventListener('click', function() {
         document.querySelectorAll(`#${containerId} .leg-item`).forEach(item => {
             const met = parseFloat(item.querySelector('.leg-activity').value);
             const mins = parseFloat(item.querySelector('.leg-duration').value) || 0;
-            // Formula: (MET - 1) * 0.0175 * Weight * Mins
             total += (met - 1) * 0.0175 * weight * mins;
         });
         return total;
@@ -41,7 +40,6 @@ document.getElementById('calcBtn').addEventListener('click', function() {
 
     const outward = calculateCals('outward-legs');
     const inward = isSameReturn ? outward : calculateCals('return-legs');
-    
     const monthlyExtraBurn = (outward + inward) * days * 4.33;
     const kgLost = monthlyExtraBurn / 7700;
 
@@ -49,14 +47,12 @@ document.getElementById('calcBtn').addEventListener('click', function() {
     const oldBMI = weight / (heightM * heightM);
     const newBMI = (weight - kgLost) / (heightM * heightM);
 
-    // Update Text Results
     document.getElementById('results').classList.remove('hidden');
     document.getElementById('calOut').innerText = Math.round(monthlyExtraBurn).toLocaleString();
     document.getElementById('weightOut').innerText = kgLost.toFixed(2);
     document.getElementById('oldBMIText').innerText = oldBMI.toFixed(1);
     document.getElementById('newBMIText').innerText = newBMI.toFixed(1);
 
-    // Marker Positioning (Mapping BMI 15-40 to 0-100%)
     function getPercent(bmi) {
         let p = ((bmi - 15) / (40 - 15)) * 100;
         return Math.max(0, Math.min(100, p));
@@ -64,10 +60,6 @@ document.getElementById('calcBtn').addEventListener('click', function() {
 
     document.getElementById('marker-old').style.left = getPercent(oldBMI) + '%';
     document.getElementById('marker-new').style.left = getPercent(newBMI) + '%';
-
-    // Fun Fact
-    const slices = Math.floor(monthlyExtraBurn / 250);
-    document.getElementById('insight').innerText = `Fun Fact: Your commute burns the equivalent of ${slices} slices of pizza every month!`;
-    
+    document.getElementById('insight').innerText = `Fun Fact: Your commute burns the equivalent of ${Math.floor(monthlyExtraBurn / 250)} slices of pizza every month!`;
     document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
 });

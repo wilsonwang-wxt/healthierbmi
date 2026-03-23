@@ -1,75 +1,93 @@
-// Function to add a new leg to the commute
-document.getElementById('addLegBtn').addEventListener('click', function() {
-  const container = document.getElementById('legs-container');
-  const newRow = document.createElement('div');
-  newRow.className = 'leg-row';
-  newRow.innerHTML = `
-    <select class="leg-activity">
-      <option value="3.5">Walking (Brisk)</option>
-      <option value="6.8">Cycling</option>
-      <option value="3.0">E-Bike</option>
-      <option value="1.5">Public Transport (Standing/Walking)</option>
-      <option value="1.3">Driving/Sitting</option>
-    </select>
-    <input type="number" class="leg-duration" placeholder="Mins">
-    <button type="button" class="remove-btn" onclick="this.parentElement.remove()">✕</button>
-  `;
-  container.appendChild(newRow);
+// Function to add new journey legs
+function addLeg(containerId) {
+    const container = document.getElementById(containerId);
+    const newRow = document.createElement('div');
+    newRow.className = 'leg-row';
+    newRow.innerHTML = `
+        <select class="leg-activity">
+            <option value="3.5">Walking (Brisk)</option>
+            <option value="6.8">Cycling</option>
+            <option value="3.0">E-Bike</option>
+            <option value="1.5">Public Transport</option>
+        </select>
+        <input type="number" class="leg-duration" placeholder="Mins">
+        <button type="button" class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+    `;
+    container.appendChild(newRow);
+}
+
+// Toggle Return Journey Section
+function toggleReturn() {
+    const isSame = document.getElementById('sameReturn').checked;
+    const returnSection = document.getElementById('returnSection');
+    isSame ? returnSection.classList.add('hidden') : returnSection.classList.remove('hidden');
+}
+
+// Methodology Toggle
+document.getElementById('toggleMethod').addEventListener('click', () => {
+    document.getElementById('methodology').classList.toggle('hidden');
 });
 
-// Main Calculation Logic
+// Main Calculation
 document.getElementById('calcBtn').addEventListener('click', function() {
-  const weight = parseFloat(document.getElementById('weight').value);
-  const heightCm = parseFloat(document.getElementById('height').value);
-  const daysPerWeek = parseFloat(document.getElementById('days').value);
-  
-  if (!weight || !heightCm) {
-    alert("Please enter weight and height");
-    return;
-  }
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value);
+    const age = parseInt(document.getElementById('age').value);
+    const days = parseInt(document.getElementById('days').value);
+    const isSameReturn = document.getElementById('sameReturn').checked;
 
-  let totalDailyExtraCalories = 0;
+    if (!weight || !height) return alert("Please enter weight and height.");
 
-  // Loop through every leg row
-  const activities = document.querySelectorAll('.leg-activity');
-  const durations = document.querySelectorAll('.leg-duration');
+    // Function to sum calories from a container
+    function getCalories(containerId) {
+        let total = 0;
+        const rows = document.getElementById(containerId).querySelectorAll('.leg-row');
+        rows.forEach(row => {
+            const met = parseFloat(row.querySelector('.leg-activity').value);
+            const mins = parseFloat(row.querySelector('.leg-duration').value) || 0;
+            total += (met - 1) * 0.0175 * weight * mins;
+        });
+        return total;
+    }
 
-  activities.forEach((activity, index) => {
-    const met = parseFloat(activity.value);
-    const mins = parseFloat(durations[index].value) || 0;
+    const outwardCals = getCalories('outward-legs');
+    const returnCals = isSameReturn ? outwardCals : getCalories('return-legs');
     
-    // Net Calories = (MET - 1) * 0.0175 * weight * duration
-    // We assume round trip, so multiply mins by 2
-    const extraBurn = (met - 1) * 0.0175 * weight * (mins * 2);
-    totalDailyExtraCalories += extraBurn;
-  });
+    const dailyTotal = outwardCals + returnCals;
+    const monthlyBurn = dailyTotal * days * 4.33;
+    const kgLost = monthlyBurn / 7700;
 
-  // Monthly Projection (4.33 weeks per month)
-  const monthlyBurn = totalDailyExtraCalories * daysPerWeek * 4.33;
-  const monthlyWeightLoss = monthlyBurn / 7700; // 7700 kcal = 1kg
+    const heightM = height / 100;
+    const currentBMI = weight / (heightM * heightM);
+    const projectedBMI = (weight - kgLost) / (heightM * heightM);
 
-  // BMI Calculation
-  const heightM = heightCm / 100;
-  const oldBMI = weight / (heightM * heightM);
-  const newBMI = (weight - monthlyWeightLoss) / (heightM * heightM);
+    // Update UI
+    document.getElementById('results').classList.remove('hidden');
+    document.getElementById('calOut').innerText = Math.round(monthlyBurn).toLocaleString();
+    document.getElementById('weightOut').innerText = kgLost.toFixed(2);
+    document.getElementById('newBMI').innerText = projectedBMI.toFixed(1);
 
-  // Update UI
-  const resultsDiv = document.getElementById('results');
-  resultsDiv.classList.remove('hidden');
-  
-  document.getElementById('calOut').innerText = Math.round(monthlyBurn).toLocaleString();
-  document.getElementById('weightOut').innerText = monthlyWeightLoss.toFixed(2);
-  document.getElementById('oldBMI').innerText = oldBMI.toFixed(1);
-  document.getElementById('newBMI').innerText = newBMI.toFixed(1);
+    // Progress Bar (Green if losing weight)
+    const barWidth = Math.min((projectedBMI / 35) * 100, 100);
+    document.getElementById('bmiBar').style.width = barWidth + '%';
 
-  // Animate Progress Bar (Normalized to BMI 35)
-  const barWidth = Math.min((newBMI / 35) * 100, 100);
-  document.getElementById('bmiBar').style.width = barWidth + '%';
+    // Fun Fact (Pizza)
+    const slices = Math.floor(monthlyBurn / 250);
+    document.getElementById('insight').innerText = `Fun Fact: Your commute burns the equivalent of ${slices} slices of pizza per month!`;
 
-  // Insights
-  const pizzaEquiv = Math.floor(monthlyBurn / 250);
-  document.getElementById('insight').innerText = `That's equivalent to burning off ${pizzaEquiv} slices of pizza every month just by commuting!`;
-  
-  // Scroll to results
-  resultsDiv.scrollIntoView({ behavior: 'smooth' });
+    // National Average Logic (Based on your HSE 2024 data)
+    let ageAvg = 27.8; // Default
+    if (age <= 24) ageAvg = 25.0;
+    else if (age >= 55 && age <= 64) ageAvg = 28.7;
+    else if (age > 24 && age < 55) ageAvg = 27.2; // Interpolated
+    
+    document.getElementById('ageAvg').innerText = ageAvg.toFixed(1);
+    
+    const diff = projectedBMI - ageAvg;
+    const compareText = diff > 0 
+        ? `Your BMI is ${Math.abs(diff).toFixed(1)} points ABOVE the average for your age.`
+        : `Your BMI is ${Math.abs(diff).toFixed(1)} points BELOW the average for your age.`;
+    document.getElementById('bmiCompareText').innerText = compareText;
+
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
 });

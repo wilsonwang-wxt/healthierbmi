@@ -3,45 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Active Travel BMI Tracker v2</title>
+  <title>Active Travel BMI Tracker</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <h1>Active Travel BMI Tracker</h1>
     
-    <!-- SECTION 1: USER PROFILE -->
     <div class="card">
       <h3>1. Your Profile</h3>
-      <div class="grid">
-        <label>Age <input type="number" id="age" value="25"></label>
-        <label>Sex 
-          <select id="sex">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </label>
-      </div>
       <div class="grid">
         <label>Weight (kg) <input type="number" id="weight" value="75"></label>
         <label>Height (cm) <input type="number" id="height" value="175"></label>
       </div>
-      <label>Active Days Per Week 
+      <label>Days of commute per week 
         <select id="days">
           <option value="1">1 Day</option>
           <option value="2">2 Days</option>
           <option value="3">3 Days</option>
           <option value="4">4 Days</option>
-          <option value="5" selected>5 Days (Standard Work Week)</option>
+          <option value="5" selected>5 Days</option>
           <option value="6">6 Days</option>
           <option value="7">7 Days</option>
         </select>
       </label>
     </div>
 
-    <!-- SECTION 2: JOURNEY OUTWARD -->
     <div class="card">
-      <h3>2. Outward Journey (To Destination)</h3>
+      <h3>2. Outward Journey</h3>
       <div id="outward-legs" class="legs-container">
         <div class="leg-row">
           <select class="leg-activity">
@@ -53,19 +42,16 @@
           <input type="number" class="leg-duration" placeholder="Mins" value="20">
         </div>
       </div>
-      <button type="button" class="secondary-btn" onclick="addLeg('outward-legs')">+ Add Leg</button>
+      <button type="button" class="add-btn" onclick="addLeg('outward-legs')">+ Add Leg</button>
       
-      <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;">
-        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-          <input type="checkbox" id="sameReturn" checked onchange="toggleReturn()"> 
-          Return journey is the same
-        </label>
+      <div class="toggle-container">
+        <input type="checkbox" id="sameReturn" checked onchange="toggleReturn()"> 
+        <label for="sameReturn">Return journey is the same</label>
       </div>
     </div>
 
-    <!-- SECTION 3: JOURNEY RETURN (HIDDEN BY DEFAULT) -->
     <div id="returnSection" class="card hidden">
-      <h3>3. Return Journey (Coming Home)</h3>
+      <h3>3. Return Journey</h3>
       <div id="return-legs" class="legs-container">
         <div class="leg-row">
           <select class="leg-activity">
@@ -77,47 +63,49 @@
           <input type="number" class="leg-duration" placeholder="Mins" value="20">
         </div>
       </div>
-      <button type="button" class="secondary-btn" onclick="addLeg('return-legs')">+ Add Leg</button>
+      <button type="button" class="add-btn" onclick="addLeg('return-legs')">+ Add Leg</button>
     </div>
 
     <button id="calcBtn" class="primary-btn">Calculate Monthly Impact</button>
 
-    <!-- RESULTS AREA -->
+    <!-- VISUAL BMI RESULTS -->
     <div id="results" class="result-card hidden">
-      <h2>Monthly Results</h2>
+      <h2>Monthly Projection</h2>
+      
       <div class="stat-grid">
-        <div class="stat-box"><small>Calories</small><div id="calOut">0</div><small>kcal</small></div>
+        <div class="stat-box"><small>Calories Burned</small><div id="calOut">0</div><small>kcal</small></div>
         <div class="stat-box"><small>Weight Loss</small><div id="weightOut">0</div><small>kg</small></div>
       </div>
 
-      <div class="bmi-box">
-        <p>Your Projected BMI: <strong id="newBMI">0</strong></p>
-        <p id="bmiCompareText" style="font-size: 0.9rem; margin-top: 5px; opacity: 0.9;"></p>
-        <div class="progress-bg"><div id="bmiBar" class="progress-fill"></div></div>
+      <div class="visualizer-container">
+        <p>BMI Progress: <span id="oldBMIText">0</span> → <strong id="newBMIText">0</strong></p>
+        
+        <div class="bmi-scale">
+            <div class="segment underweight"></div>
+            <div class="segment healthy"></div>
+            <div class="segment overweight"></div>
+            <div class="segment obese"></div>
+            
+            <!-- Markers -->
+            <div id="marker-old" class="marker old" title="Current BMI"><span>▼</span><br>Old</div>
+            <div id="marker-new" class="marker new" title="New BMI"><span>▼</span><br>New</div>
+        </div>
+        <div class="scale-labels">
+            <span>18.5</span>
+            <span>25</span>
+            <span>30</span>
+        </div>
       </div>
 
       <p id="insight" class="insight-text"></p>
-      
-      <!-- National Stats Comparison -->
-      <div class="comparison-table">
-        <h4>How You Compare (HSE 2024 Data)</h4>
-        <div class="comp-row"><span>National Avg (All Adults):</span> <strong>27.8</strong></div>
-        <div id="ageAvgRow" class="comp-row"><span>Avg for your age:</span> <strong id="ageAvg">--</strong></div>
-        <div class="comp-row"><span>Standard "Healthy" Max:</span> <strong>24.9</strong></div>
-      </div>
     </div>
 
-    <!-- METHODOLOGY BUTTON -->
-    <button id="toggleMethod" class="method-btn">How is this calculated?</button>
-    <div id="methodology" class="card hidden methodology-text">
-      <h4>Scientific Methodology</h4>
-      <p><strong>Calories:</strong> We use the Metabolic Equivalent of Task (MET) formula: <br>
-      <code>Burn = (MET - 1) * 0.0175 * Weight * Time</code>. <br>
-      We subtract 1 MET to represent the <em>additional</em> energy burned over resting.</p>
-      
-      <p><strong>Weight Loss:</strong> Based on the scientific consensus that burning 7,700 kcal extra results in roughly 1kg of fat loss.</p>
-      
-      <p><strong>BMI & Gender:</strong> While BMI thresholds (18.5 - 25) are globally consistent for both sexes, women typically have a higher body fat percentage at the same BMI as men. Our comparison uses Health Survey for England (HSE) 2024 benchmarks.</p>
+    <button id="toggleMethod" class="method-link">How is this calculated?</button>
+    <div id="methodology" class="card hidden method-content">
+      <h4>Methodology</h4>
+      <p><strong>Calorie calculation:</strong> We use the Metabolic Equivalent of Task (MET) formula: 
+      <code>(MET - 1) * 0.0175 * Weight * Time</code>. The "-1" accounts for the calories you would have burned while resting.</p>
+      <p><strong>Weight Projection:</strong> Based on the calculation that a deficit of 7,700 kcal results in 1kg of weight loss. This assumes your food intake remains constant.</p>
     </div>
   </div>
   <script src="script.js"></script>

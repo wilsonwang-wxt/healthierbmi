@@ -1,124 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Active Travel BMI Tracker</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>Active Travel BMI Tracker</h1>
+<div class="visualizer-container">
+    <p class="bmi-text">BMI Progress: <span id="oldBMIText">0</span> → <strong id="newBMIText">0</strong></p>
     
-    <div class="card">
-      <h3>1. Your Profile</h3>
-      <div class="grid">
-        <label>Weight (kg) <input type="number" id="weight" value="75"></label>
-        <label>Height (cm) <input type="number" id="height" value="175"></label>
-      </div>
-      <label>Days of commute per week 
-        <select id="days">
-          <option value="1">1 Day</option>
-          <option value="2">2 Days</option>
-          <option value="3">3 Days</option>
-          <option value="4">4 Days</option>
-          <option value="5" selected>5 Days</option>
-          <option value="6">6 Days</option>
-          <option value="7">7 Days</option>
-        </select>
-      </label>
+    <!-- Legend -->
+    <div class="bmi-legend">
+        <div class="legend-item"><span class="dot underweight"></span> Underweight</div>
+        <div class="legend-item"><span class="dot healthy"></span> Healthy</div>
+        <div class="legend-item"><span class="dot overweight"></span> Overweight</div>
+        <div class="legend-item"><span class="dot obese"></span> Obese</div>
     </div>
 
-    <div class="card">
-      <h3>2. Outward Journey</h3>
-      <div id="outward-legs" class="legs-container">
-        <div class="leg-row">
-          <select class="leg-activity">
-            <option value="3.5">Walking (Brisk)</option>
-            <option value="6.8">Cycling</option>
-            <option value="3.0">E-Bike</option>
-            <option value="1.5">Public Transport</option>
-          </select>
-          <input type="number" class="leg-duration" placeholder="Mins" value="20">
-        </div>
-      </div>
-      <button type="button" class="add-btn" onclick="addLeg('outward-legs')">+ Add Leg</button>
-      
-      <div class="toggle-container">
-        <input type="checkbox" id="sameReturn" checked onchange="toggleReturn()"> 
-        <label for="sameReturn">Return journey is the same</label>
-      </div>
-    </div>
-
-    <div id="returnSection" class="card hidden">
-      <h3>3. Return Journey</h3>
-      <div id="return-legs" class="legs-container">
-        <div class="leg-row">
-          <select class="leg-activity">
-            <option value="3.5">Walking (Brisk)</option>
-            <option value="6.8">Cycling</option>
-            <option value="3.0">E-Bike</option>
-            <option value="1.5">Public Transport</option>
-          </select>
-          <input type="number" class="leg-duration" placeholder="Mins" value="20">
-        </div>
-      </div>
-      <button type="button" class="add-btn" onclick="addLeg('return-legs')">+ Add Leg</button>
-    </div>
-
-    <button id="calcBtn" class="primary-btn">Calculate Monthly Impact</button>
-
-    <div id="results" class="result-card hidden">
-      <h2>Monthly Projection</h2>
-      
-      <div class="stat-grid">
-        <div class="stat-box"><small>Extra Burn</small><div id="calOut">0</div><small>kcal</small></div>
-        <div class="stat-box"><small>Weight Loss</small><div id="weightOut">0</div><small>kg</small></div>
-      </div>
-
-      <div class="visualizer-container">
-        <p class="bmi-text">BMI Progress: <span id="oldBMIText">0</span> → <strong id="newBMIText">0</strong></p>
-        
-        <!-- Legend -->
-        <div class="bmi-legend">
-            <div class="legend-item"><span class="dot underweight"></span> Underweight</div>
-            <div class="legend-item"><span class="dot healthy"></span> Healthy</div>
-            <div class="legend-item"><span class="dot overweight"></span> Overweight</div>
-            <div class="legend-item"><span class="dot obese"></span> Obese</div>
+    <!-- The Actual Scale Area -->
+    <div class="scale-area">
+        <!-- Old Marker (Above) -->
+        <div id="marker-old" class="marker old-marker">
+            Old<br><span>▼</span>
         </div>
 
-        <div class="bmi-scale-wrapper">
-            <!-- Markers -->
-            <div id="marker-old" class="marker old">Old<br><span>▲</span></div>
-            <div id="marker-new" class="marker new"><span>▼</span><br>New</div>
-
-            <div class="bmi-scale">
-                <div class="segment underweight"></div>
-                <div class="segment healthy"></div>
-                <div class="segment overweight"></div>
-                <div class="segment obese"></div>
-            </div>
-            <div class="scale-labels">
-                <span>15</span>
-                <span>18.5</span>
-                <span>25</span>
-                <span>30</span>
-                <span>40</span>
-            </div>
+        <!-- The Colored Bar -->
+        <div class="bmi-bar">
+            <div class="seg underweight"></div>
+            <div class="seg healthy"></div>
+            <div class="seg overweight"></div>
+            <div class="seg obese"></div>
         </div>
-      </div>
 
-      <p id="insight" class="insight-text"></p>
-    </div>
+        <!-- New Marker (Below) -->
+        <div id="marker-new" class="marker new-marker">
+            <span>▲</span><br>New
+        </div>
 
-    <button id="toggleMethod" class="method-link">How is this calculated?</button>
-    <div id="methodology" class="card hidden method-content">
-      <h4>Methodology</h4>
-      <p><strong>Calories:</strong> Uses the MET formula: <code>(MET - 1) * 0.0175 * Weight * Time</code>. The "-1" accounts for net calories burned above resting.</p>
-      <p><strong>Weight:</strong> Assumes a deficit of 7,700 kcal equals 1kg of weight loss.</p>
-      <p><strong>Disclaimer:</strong> This calculation assumes all other factors remain constant, including your <strong>baseline physical activity levels</strong> and <strong>average calorie intake</strong>.</p>
+        <!-- Scale Labels -->
+        <div class="scale-numbers">
+            <span>15</span>
+            <span>18.5</span>
+            <span>25</span>
+            <span>30</span>
+            <span>40</span>
+        </div>
     </div>
-  </div>
-  <script src="script.js"></script>
-</body>
-</html>
+</div>

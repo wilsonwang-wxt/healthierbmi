@@ -8,44 +8,59 @@
 </head>
 <body>
   <div class="container">
-    <h1>Active Travel BMI Calculator</h1>
-    <p class="subtitle">See how your commute impacts your health over a month.</p>
+    <h1>Active Travel BMI Tracker</h1>
+    <p class="subtitle">Combine multiple modes to see your monthly health impact.</p>
     
-    <form id="calculatorForm">
+    <div class="card">
+      <h3>1. Your Profile</h3>
       <div class="grid">
-        <label>Weight (kg): <input type="number" id="weight" placeholder="70" required></label>
-        <label>Height (cm): <input type="number" id="height" placeholder="170" required></label>
+        <label>Weight (kg) <input type="number" id="weight" value="70"></label>
+        <label>Height (cm) <input type="number" id="height" value="170"></label>
+      </div>
+      <label>Working days per week <input type="number" id="days" value="5" max="7"></label>
+    </div>
+
+    <div class="card">
+      <h3>2. Your Daily Commute (One Way)</h3>
+      <div id="legs-container">
+        <!-- Default Leg -->
+        <div class="leg-row">
+          <select class="leg-activity">
+            <option value="3.5">Walking (Brisk)</option>
+            <option value="6.8">Cycling</option>
+            <option value="3.0">E-Bike</option>
+            <option value="1.5">Public Transport (Standing/Walking)</option>
+            <option value="1.3">Driving/Sitting</option>
+          </select>
+          <input type="number" class="leg-duration" placeholder="Mins" value="15">
+          <button type="button" class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+        </div>
+      </div>
+      <button type="button" id="addLegBtn" class="secondary-btn">+ Add Journey Leg</button>
+    </div>
+
+    <button id="calcBtn" class="primary-btn">Calculate Monthly Impact</button>
+
+    <div id="results" class="result-card hidden">
+      <h3>Monthly Projection (Round Trip)</h3>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <small>Extra Burn</small>
+          <div id="calOut">0</div><small>kcal</small>
+        </div>
+        <div class="stat-box">
+          <small>Weight Loss</small>
+          <div id="weightOut">0</div><small>kg</small>
+        </div>
       </div>
 
-      <label>Commute Mode:
-        <select id="activity">
-          <option value="3.5">Walking (Brisk)</option>
-          <option value="6.8">Cycling (Moderate)</option>
-          <option value="3.0">E-Bike</option>
-          <option value="1.5">Public Transport (Mixed)</option>
-        </select>
-      </label>
-
-      <label>Daily Duration (mins, one way): <input type="number" id="duration" placeholder="20" required></label>
-      <label>Days per week: <input type="number" id="days" value="5" required></label>
-
-      <button type="submit">Project Monthly Results</button>
-    </form>
-
-    <div id="results" class="hidden">
-      <div class="result-card">
-        <h3>Monthly Projection</h3>
-        <p>Extra Calories Burned: <span id="calOut">0</span> kcal</p>
-        <p>Estimated Weight Loss: <span id="weightOut">0</span> kg</p>
-        <div class="bmi-comparison">
-          <div>Initial BMI: <strong id="oldBMI">0</strong></div>
-          <div>New BMI: <strong id="newBMI" class="highlight">0</strong></div>
+      <div class="bmi-display">
+        <p>BMI: <span id="oldBMI">0</span> → <strong id="newBMI">0</strong></p>
+        <div class="progress-bg">
+          <div id="bmiBar" class="progress-fill"></div>
         </div>
-        <div class="progress-container">
-          <div id="bmiBar" class="progress-bar"></div>
-        </div>
-        <p id="insight" class="insight-text"></p>
       </div>
+      <p id="insight" class="insight-text"></p>
     </div>
   </div>
   <script src="script.js"></script>

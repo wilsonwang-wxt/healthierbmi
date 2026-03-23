@@ -18,3 +18,22 @@ document.getElementById('calculatorForm').addEventListener('submit', function(e)
     <p>BMI: <strong>${oldBMI.toFixed(2)}</strong> → <strong>${newBMI.toFixed(2)}</strong></p>
   `;
 });
+const METS = { walking: 3.5, cycling: 6.8, transit: 1.5 };
+
+function calculateResults(user) {
+    // 1. Calculate Daily Extra Burn
+    const dailyExtra = (METS[user.mode] - 1) * 0.0175 * user.weight * (user.duration * 2);
+    
+    // 2. Project Monthly (5 days/week)
+    const monthlyDeficit = dailyExtra * 5 * 4.33;
+    
+    // 3. Weight loss (7700 kcal = 1kg)
+    const kgLostPerMonth = monthlyDeficit / 7700;
+    
+    // 4. Update BMI after 1 month
+    const newWeight = user.weight - kgLostPerMonth;
+    const heightInMeters = user.height / 100;
+    const newBMI = newWeight / (heightInMeters * heightInMeters);
+    
+    return { kgLostPerMonth, newBMI, monthlyDeficit };
+}

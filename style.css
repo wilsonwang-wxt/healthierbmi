@@ -33,6 +33,7 @@ input[type="checkbox"] { width: 18px !important; height: 18px !important; margin
 
 .leg-item { display: flex; gap: 8px; margin-bottom: 10px; }
 .btn-add { background: none; border: 1px dashed #adb5bd; width: 100%; padding: 8px; border-radius: 8px; cursor: pointer; color: #636e72; font-size: 0.8rem; }
+.btn-remove { flex: 0 0 42px; border: 1px solid #dfe6e9; border-radius: 8px; background: white; color: #d63031; font-size: 1.25rem; cursor: pointer; }
 .btn-primary { background: var(--primary); color: white; border: none; width: 100%; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
 /* Results Styling */

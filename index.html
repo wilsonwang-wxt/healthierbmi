@@ -39,6 +39,15 @@
                         <option value="7">7 Days</option>
                     </select>
                 </div>
+                <div class="input-group">
+                    <label>Projection period</label>
+                    <select id="months">
+                        <option value="1" selected>1 Month</option>
+                        <option value="3">3 Months</option>
+                        <option value="6">6 Months</option>
+                        <option value="12">12 Months</option>
+                    </select>
+                </div>
             </section>
 
             <!-- 2. Outward Journey -->
@@ -53,7 +62,7 @@
                             <option value="3.0">E-Bike</option>
                             <option value="1.5">Public Transport</option>
                         </select>
-                        <input type="number" class="leg-duration" value="20" placeholder="Mins">
+                        <input type="number" class="leg-duration" value="20" min="0" max="1440" placeholder="Mins">
                     </div>
                 </div>
                 <button class="btn-add" onclick="addLeg('outward-legs')">+ Add Leg</button>
@@ -78,7 +87,7 @@
                             <option value="3.0">E-Bike</option>
                             <option value="1.5">Public Transport</option>
                         </select>
-                        <input type="number" class="leg-duration" value="20" placeholder="Mins">
+                        <input type="number" class="leg-duration" value="20" min="0" max="1440" placeholder="Mins">
                     </div>
                 </div>
                 <button class="btn-add" onclick="addLeg('return-legs')">+ Add Leg</button>
@@ -88,7 +97,7 @@
 
             <!-- Results Section -->
             <section id="results" class="results-container hidden">
-                <h2>Monthly Projection</h2>
+                <h2 id="resultsHeader">1-Month Projection</h2>
                 
                 <div class="results-grid">
                     <div class="result-box">
@@ -125,15 +134,13 @@
 
                         <!-- NEW Marker (Bottom) -->
                         <div id="marker-new" class="marker marker-bottom"><span>▲</span><br>New</div>
-
-                 
-
+                    </div>
                 </div>
 
                 <p id="insight" class="fun-fact"></p>
             </section>
 
-            <button class="btn-text" onclick="document.getElementById('methodology').classList.toggle('hidden')">how is this calculate</button>
+            <button class="btn-text" onclick="document.getElementById('methodology').classList.toggle('hidden')">How is this calculated?</button>
             <div id="methodology" class="methodology-card hidden">
                 <h4>Methodology</h4>
                 <p><strong>Calorie Burn:</strong> Calculated using the Metabolic Equivalent of Task (MET) formula: <code>(MET - 1) * 0.0175 * Weight * Duration</code>. We subtract 1 MET to isolate the additional energy burned over resting levels.</p>
